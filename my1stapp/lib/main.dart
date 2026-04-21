@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _counter = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,17 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 2,
             child: Row(
               children: [
-                //Expanded(flex: 2, child: Text("count: $_counter")),
                 Expanded(
                   flex: 2,
-                  child: Image.network(
-                    "https://picsum.photos/seed/$_counter/400/300",
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.network(
+                          "https://picsum.photos/seed/$_counter/400/300",
+                        ),
+                      ),
+                      Text("count: $_counter"),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -60,12 +66,34 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _counter++;
                               });
                             },
-                            child: Icon(Icons.plus_one),
+                            child: Text("+1"),
                           ),
                         ),
                       ),
-                      Expanded(child: Placeholder()),
-                      Expanded(child: Placeholder()),
+                      Expanded(
+                        child: FittedBox(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _counter--;
+                              });
+                            },
+                            child: Text("-1"),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _counter = 0;
+                              });
+                            },
+                            child: Icon(Icons.refresh),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
