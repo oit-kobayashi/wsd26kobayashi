@@ -37,12 +37,22 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
   SharedPreferences? _sp;
 
+  void _setCounter(int c) {
+    setState(() {
+      _counter = c;
+    });
+    if (_sp != null) {
+      unawaited(_sp!.setInt('count', _counter));
+    }
+  }
+
   @override
-  void setState(VoidCallback fn) {
+  void initState() {
     SharedPreferences.getInstance().then((sp) {
       _sp = sp;
+      _setCounter(sp.getInt('count') ?? 0);
     });
-    super.setState(fn);
+    super.initState();
   }
 
   @override
@@ -78,9 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: FittedBox(
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _counter++;
-                              });
+                              _setCounter(_counter + 1);
                             },
                             child: Text("+1"),
                           ),
@@ -90,9 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: FittedBox(
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _counter--;
-                              });
+                              _setCounter(_counter - 1);
                             },
                             child: Text("-1"),
                           ),
@@ -102,9 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: FittedBox(
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _counter = 0;
-                              });
+                              _setCounter(0);
                             },
                             child: Icon(Icons.refresh),
                           ),
