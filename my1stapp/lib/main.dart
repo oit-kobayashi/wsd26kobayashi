@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +30,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
+  SharedPreferences? _sp;
+
+  @override
+  void setState(VoidCallback fn) {
+    SharedPreferences.getInstance().then((sp) {
+      _sp = sp;
+    });
+    super.setState(fn);
+  }
 
   @override
   Widget build(BuildContext context) {
