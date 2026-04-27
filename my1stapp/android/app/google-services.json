@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "228719155685",
+    "project_id": "monodes1kobayashi2023",
+    "storage_bucket": "monodes1kobayashi2023.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228719155685:android:40681751a1590693a0370c",
+        "android_client_info": {
+          "package_name": "com.example.my1stapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz4_hoii4aS3rq5L4_mqHHjW6r1VYm5QA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
