@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
   int _maxCounter = 1;
   SharedPreferences? _sp;
+  String _message = "(message)";
 
   void _setCounter(int c) {
     setState(() {
@@ -48,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_sp != null) {
       unawaited(_sp!.setInt('count', _maxCounter));
     }
+    final db = FirebaseFirestore.instance;
+    db.collection("state").doc("current").set({"count": _counter});
   }
 
   @override
@@ -56,6 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
       _sp = sp;
       _setCounter(sp.getInt('count') ?? 0);
     });
+    final ref = FirebaseFirestore.instance.collection("messages").doc("new");
+    ref.snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data();
+        print(data);
+        if (data != null) {
+          setState(() {
+            _message = data["message"];
+          });
+        }
+      }
+    });
+
     super.initState();
   }
 
@@ -124,7 +140,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          Expanded(child: Placeholder()),
+          Expanded(
+            child: Column(
+              children: [
+                Text(_message),
+                TextField(
+                  onSubmitted: (s) {
+                    final db = FirebaseFirestore.instance;
+                    db.collection("messages").doc("new").set({"message": s});
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
