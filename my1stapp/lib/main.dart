@@ -35,14 +35,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
+  int _maxCounter = 1;
   SharedPreferences? _sp;
 
   void _setCounter(int c) {
     setState(() {
       _counter = c;
     });
+    if (_counter > _maxCounter) {
+      _maxCounter = _counter;
+    }
     if (_sp != null) {
-      unawaited(_sp!.setInt('count', _counter));
+      unawaited(_sp!.setInt('count', _maxCounter));
     }
   }
 
