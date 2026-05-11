@@ -59,15 +59,16 @@ class _MyHomePageState extends State<MyHomePage> {
       _sp = sp;
       _setCounter(sp.getInt('count') ?? 0);
     });
-    final ref = FirebaseFirestore.instance.collection("messages").doc("new");
-    ref.snapshots().listen((snapshot) {
-      if (snapshot.exists) {
-        final data = snapshot.data();
-        print(data);
-        if (data != null) {
-          setState(() {
-            _message = data["message"];
-          });
+    final ref = FirebaseFirestore.instance.collection("messages");
+    ref.snapshots().listen((QuerySnapshot snapshot) {
+      for (final docChange in snapshot.docChanges) {
+        if (docChange.type == DocumentChangeType.added) {
+          final data = docChange.doc.data();
+          if (data is Map<String, dynamic>) {
+            setState(() {
+              _message = data["message"];
+            });
+          }
         }
       }
     });
@@ -147,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   onSubmitted: (s) {
                     final db = FirebaseFirestore.instance;
-                    db.collection("messages").doc("new").set({"message": s});
+                    db.collection("messages").add({"message": s});
                   },
                 ),
               ],
