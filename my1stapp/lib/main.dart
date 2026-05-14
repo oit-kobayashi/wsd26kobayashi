@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +73,22 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     });
-
+    // 天気取得
+    final url = Uri.parse(
+      'https://api.openweathermap.org/data/2.5/weather?id=1853908&appid=cbcaed84cb5e809e27efd7b8ec30f7e9',
+    );
+    http.get(url).then((resp) {
+      if (resp.statusCode == 200) {
+        final data = jsonDecode(resp.body) as Map<String, dynamic>;
+        final weather = (data['weather'] as List)[0];
+        final desc = weather['description'] as String;
+        final icon = weather['icon'] as String;
+        print(desc);
+        print(icon);
+        final urlS =
+            "https://openweathermap.org/payload/api/media/file/$icon.png";
+      }
+    });
     super.initState();
   }
 
@@ -134,6 +151,30 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
+                      Expanded(
+                        child: FittedBox(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final url = Uri.parse(
+                                "https://jsonplaceholder.typicode.com/posts",
+                              );
+                              final data = {
+                                'title': 'test you',
+                                'body': 'by kobayashi',
+                                'userId': 5,
+                              };
+                              final resp = await http.post(
+                                url,
+                                headers: {'Content-Type': 'application/json'},
+                                body: jsonEncode(data),
+                              );
+                              print("status: ${resp.statusCode}");
+                              print("body: ${resp.body}");
+                            },
+                            child: Text("POST"),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -143,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Column(
               children: [
-                Text(_message),
+                Text(_message, style: TextStyle(fontSize: 24)),
                 TextField(
                   onSubmitted: (s) {
                     final db = FirebaseFirestore.instance;
