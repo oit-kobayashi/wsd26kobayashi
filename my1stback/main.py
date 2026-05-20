@@ -22,6 +22,16 @@ def post_calc(params: CalcParams):
     op = params.operator
     a1 = params.operand1
     a2 = params.operand2
-    print(op, a1, a2)
-    return {"ans": 123.45} # この部分を op, a1, a2 の内容に応じて変える。例: (op, a1, a2)==("add", 12, 34) なら {"ans": 46.0} 
+    if op == 'add':
+        ans = a1 + a2
+    elif op == 'sub':
+        ans = a1 - a2
+    elif op == 'mul':
+        ans = a1 * a2
+    elif op == 'div':
+        ans = a1 / a2
+    else:
+        ans = 0
+    
+    return {"ans": ans}
 
