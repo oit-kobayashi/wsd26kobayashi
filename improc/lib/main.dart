@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Uint8List? _image;
+  String _procedure = "gray";
 
   Future<void> _pickAndProc() async {
     final XFile? xf = await ImagePicker().pickImage(
@@ -40,12 +41,16 @@ class _MyHomePageState extends State<MyHomePage> {
     if (bs != null) {
       final req = http.MultipartRequest(
         "POST",
-        Uri.parse("http://localhost:8000/improc?procedure=illust"),
+        Uri.parse("https://improc.onrender.com/improc?procedure=$_procedure"),
       );
       req.files.add(
         http.MultipartFile.fromBytes("image_file", bs, filename: xf!.name),
       );
       final strmResp = await req.send();
+      final resp = await http.Response.fromStream(strmResp);
+      setState(() {
+        _image = resp.bodyBytes;
+      });
     }
   }
 
@@ -60,7 +65,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: .center,
           children: [
-            const Text('画像'),
+            DropdownButton(
+              value: _procedure,
+              items: [
+                DropdownMenuItem(value: "gray", child: Text("グレースケール")),
+                DropdownMenuItem(value: "edge", child: Text("エッジ抽出")),
+                DropdownMenuItem(value: "illust", child: Text("イラスト風")),
+                DropdownMenuItem(value: "dummy", child: Text("元画像")),
+              ],
+              onChanged: (v) {
+                setState(() {
+                  _procedure = v ?? _procedure;
+                });
+              },
+            ),
             _image != null ? Image.memory(_image!) : Placeholder(),
             ElevatedButton(onPressed: _pickAndProc, child: Text("画像選択")),
           ],
