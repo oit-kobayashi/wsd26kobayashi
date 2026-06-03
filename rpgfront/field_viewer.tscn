@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dld8qn7eh1nc0"]
+
+[ext_resource type="Script" uid="uid://bffo0emev30vq" path="res://field_viewer.gd" id="1_ayvl3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p06f5"]
+albedo_color = Color(0.06666667, 0.26666668, 0.12156863, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ayvl3"]
+material = SubResource("StandardMaterial3D_p06f5")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_p06f5"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ayvl3"]
+sky_material = SubResource("ProceduralSkyMaterial_p06f5")
+
+[sub_resource type="Environment" id="Environment_rb5jf"]
+background_mode = 2
+sky = SubResource("Sky_ayvl3")
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[node name="FieldViewer" type="Node3D" unique_id=1059783447]
+script = ExtResource("1_ayvl3")
+endpoint = "http://localhost:8010/api"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1637744091]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -0.25, 0)
+mesh = SubResource("PlaneMesh_ayvl3")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=604158386]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=525159805]
+environment = SubResource("Environment_rb5jf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=645192136]
+transform = Transform3D(0.95180875, -0.16741346, 0.25696856, 0, 0.8378712, 0.545868, -0.3066922, -0.51956195, 0.79749316, 1.1226158, 0.47446477, 0)
+shadow_enabled = true
+
+[node name="MazeWalls" type="Node" parent="." unique_id=1470480214]
+
+[node name="Control" type="Control" parent="." unique_id=540340819]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Control" unique_id=890658317]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 28.0
+offset_right = 139.0
+offset_bottom = 51.0
+text = "test"
